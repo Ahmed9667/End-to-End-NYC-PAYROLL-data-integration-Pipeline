@@ -365,8 +365,9 @@ def create_tales():
 
 create_tales()
 print('Schema and tables created successfully')
+```
 
 Showing Schema in the data warehouse
 
 ![image.png](attachment:image.png)
-```
+
