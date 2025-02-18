@@ -367,7 +367,9 @@ create_tales()
 print('Schema and tables created successfully')
 ```
 
-Showing Schema in the data warehouse
+Showing Schema in the data warehouse and check for created scheam and tables
 
-![image.png](attachment:image.png)
+![image](https://github.com/user-attachments/assets/8dc6a71d-4842-4154-b12c-652d0a6a101a)
+
+
 
