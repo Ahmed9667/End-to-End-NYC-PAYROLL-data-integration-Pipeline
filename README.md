@@ -456,7 +456,34 @@ order by number_of_eployees desc"""
 cur.execute(query)
 result = cur.fetchall()
 temp = pd.DataFrame(result , columns = [i[0] for i in cur.description])
-temp
+sns.barplot(x=temp['number_of_eployees'],y=temp['agencyname'] )
+plt.title('Number of Employees per agencies')
+plt.show()
 ```
+![image](https://github.com/user-attachments/assets/a2314b9a-76b9-45dd-9599-c5df0d765268)
+Office of Emergency management has the highest number of employees
+
+```python
+con = psycopg2.connect(user=username_db, 
+                                   host=host_db,  
+                                   password=password_db,  
+                                   port=port_db,
+                                   database=db_name)
+cur = con.cursor()
+query = """select WorkLocationBorough , count(EmployeeID) as number_of_eployees 
+from payroll.agency
+inner join payroll.fact_employee
+on agency.AgencyID = fact_employee.AgencyID
+group by WorkLocationBorough
+order by number_of_eployees desc"""
+cur.execute(query)
+result = cur.fetchall()
+temp = pd.DataFrame(result , columns = [i[0] for i in cur.description])
+sns.barplot(x=temp['number_of_eployees'],y=temp['worklocationborough'] )
+plt.title('Number of Employees per worklocation')
+plt.show()
+```
+![image](https://github.com/user-attachments/assets/ff85315d-769b-419e-b0c8-62f6a5c5818e)
+Brooklyn has the highest number of employees and so agencies while Richmond is the least recorded one
 
 
