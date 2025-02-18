@@ -28,7 +28,7 @@ agencies. The City of New York would like to develop a Data Analytics platform t
 To check for any data validation for analysis and ETL process we must cleans the data and make sure that it has no null values or duplicated records and ensure the validity of rational data types's columns according to the business keys.
 
 We will first import the data from Github repository and create a scalable automated function to import two concatenated NYC dataframes
-'''python
+''' python
 # Create a scalable function to read identitcal datasets in pandas
 def concatenated_datasets(datasets , axis= 0):
     # initialize empty list to add read datasets
@@ -50,6 +50,7 @@ if __name__ == '__main__':
     
 df =   concatenated_datasets(datasets , axis=0) 
 print(df)
+
 '''
 
 
