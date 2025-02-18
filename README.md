@@ -316,6 +316,7 @@ conn = db_connected()
 print(f"Database {db_params['database']} connected successfully")
 ```
 
+
 ### `3.- Develop a scalable and automated ETL Pipeline to load the payroll data NYC data warehouse:`
 
 ```python
@@ -370,6 +371,70 @@ print('Schema and tables created successfully')
 Showing Schema in the data warehouse and check for created scheam and tables
 
 ![image](https://github.com/user-attachments/assets/8dc6a71d-4842-4154-b12c-652d0a6a101a)
+
+##### Inserting Records in Tables with automated pipeline:
+```python
+def load_records(df):
+    conn = db_connected()
+    cursor = conn.cursor()
+
+    for index, row in df.iterrows():
+        try:
+            cursor.execute("""
+                INSERT INTO payroll.agency (AgencyID, AgencyCode,AgencyName, AgencyStartDate,WorkLocationBorough) 
+                VALUES (%s, %s, %s, %s,%s);
+            """, (row['AgencyID'], row['AgencyCode'], row['AgencyName'], row['AgencyStartDate'],row['WorkLocationBorough']))
+        except psycopg2.IntegrityError:
+            conn.rollback()  # Rollback on error (duplicate keys or constraint violations)
+        else:
+            conn.commit()  # Commit after each successful insert
+
+    cursor.close()
+    conn.close()
+load_records(agency)
+
+def load_records(df):
+    conn = db_connected()
+    cursor = conn.cursor()
+
+    for index, row in df.iterrows():
+        try:
+            cursor.execute("""
+                INSERT INTO payroll.fact_employee (EmployeeID, AgencyID, FiscalYear, BaseSalary, RegularHours, RegularGrossPaid, OTHours, TotalOTPaid, TotalOtherPay, PayBasis) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+            """, (row['EmployeeID'], row['AgencyID'], row['FiscalYear'], row['BaseSalary'], row['RegularHours'], row['RegularGrossPaid'], row['OTHours'], row['TotalOTPaid'], row['TotalOtherPay'], row['PayBasis']))
+        except psycopg2.IntegrityError:
+            conn.rollback()  
+        else:
+            conn.commit()  
+
+    cursor.close()
+    conn.close()
+load_records(fact_employee)
+
+def load_records(df):
+    conn = db_connected()
+    cursor = conn.cursor()
+
+    for index, row in df.iterrows():
+        try:
+            cursor.execute("""
+                INSERT INTO payroll.employee (EmployeeID , TitleCode ,LastName, FirstName,PayrollNumber,TitleDescription,LeaveStatusasofJune30) 
+                VALUES (%s, %s, %s, %s,%s,%s,%s);
+            """, (row['EmployeeID'], row['TitleCode'], row['LastName'], row['FirstName'],row['PayrollNumber'],row['TitleDescription'],row['LeaveStatusasofJune30']))
+        except psycopg2.IntegrityError:
+            conn.rollback()  
+        else:
+            conn.commit()  
+
+    cursor.close()
+    conn.close()
+
+
+load_records(employee)
+print('Records added successfully')
+```
+
 
 
 
