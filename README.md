@@ -435,6 +435,28 @@ load_records(employee)
 print('Records added successfully')
 ```
 
+### `4.Develop aggregate table(s) in the Data warehouse for easy analysis of the key business questions:`
 
+Extracting insights from stored schema is crucial for concluding KPIS and thoughts for the purpose of business keys using data visualiztion techniques of seaborn and matplotlib python libraries to faciltate connection with data warehouse.
+
+We will execute SQL queries to gain insights from recorded data in data warehouse:
+```python
+con = psycopg2.connect(user=username_db, 
+                                   host=host_db,  
+                                   password=password_db,  
+                                   port=port_db,
+                                   database=db_name)
+cur = con.cursor()
+query = """select AgencyName , count(EmployeeID) as number_of_eployees 
+from payroll.agency
+inner join payroll.fact_employee
+on agency.AgencyID = fact_employee.AgencyID
+group by AgencyName
+order by number_of_eployees desc"""
+cur.execute(query)
+result = cur.fetchall()
+temp = pd.DataFrame(result , columns = [i[0] for i in cur.description])
+temp
+```
 
 
