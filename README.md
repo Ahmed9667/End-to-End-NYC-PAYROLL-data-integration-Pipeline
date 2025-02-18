@@ -316,3 +316,57 @@ conn = db_connected()
 print(f"Database {db_params['database']} connected successfully")
 ```
 
+### `3.- Develop a scalable and automated ETL Pipeline to load the payroll data NYC data warehouse:`
+
+```python
+def create_tales():
+    conn = db_connected()
+    cursor = conn.cursor()
+    query = """
+                create schema if not exists payroll;
+
+                create table payroll.agency(
+                    AgencyID decimal(20,2),
+                    AgencyCode decimal(20,2),
+                    AgencyName varchar(255),
+                    AgencyStartDate date,
+                    WorkLocationBorough varchar(255));
+
+                create table payroll.fact_employee(
+                    EmployeeID int primary key,
+                    AgencyID int,
+                    FiscalYear int,
+                    BaseSalary decimal(20,2),
+                    RegularHours decimal(20,2),
+                    RegularGrossPaid decimal(20,2),
+                    OTHours decimal(20,2),
+                    TotalOTPaid decimal(20,2),
+                    TotalOtherPay decimal(20,2),
+                    PayBasis varchar(255)
+                );
+                
+
+                create table payroll.employee(
+                    EmployeeID int primary key,
+                    TitleCode int,
+                    LastName varchar(255),
+                    FirstName varchar(255),
+                    PayrollNumber int,
+                    TitleDescription varchar(255),
+                    LeaveStatusasofJune30 varchar(255),
+                    foreign key (EmployeeID) references payroll.fact_employee(EmployeeID)
+                );
+                    
+            """
+    cursor.execute(query)
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+create_tales()
+print('Schema and tables created successfully')
+
+Showing Schema in the data warehouse
+
+![image.png](attachment:image.png)
+```
