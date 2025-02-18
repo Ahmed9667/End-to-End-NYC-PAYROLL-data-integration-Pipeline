@@ -219,3 +219,21 @@ frame_of_duplicates
 </table>
 </div>
 We only have column 'EmployeeID' with unique keys
+
+### Dimensional Model Of Schema
+
+![Schema.png](attachment:Schema.png)
+
+We will create tables according to the structured schema and then load them to PostgreSql server database
+```python
+#create table fact_employee
+fact_employee= df[['EmployeeID','AgencyID','FiscalYear','BaseSalary','RegularHours', 'RegularGrossPaid', 'OTHours',
+       'TotalOTPaid', 'TotalOtherPay','PayBasis']]
+
+#create agency table
+agency = df[['AgencyID','AgencyCode','AgencyName','AgencyStartDate', 'WorkLocationBorough']].copy().drop_duplicates().reset_index(drop=True)
+agency['AgencyStartDate'] = pd.to_datetime(agency['AgencyStartDate'])
+
+#create table employee
+employee = df[['EmployeeID','TitleCode','LastName', 'FirstName','PayrollNumber','TitleDescription', 'LeaveStatusasofJune30']].copy().drop_duplicates().reset_index(drop=True)
+```
