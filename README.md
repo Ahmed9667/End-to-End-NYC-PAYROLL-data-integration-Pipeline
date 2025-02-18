@@ -484,6 +484,119 @@ plt.title('Number of Employees per worklocation')
 plt.show()
 ```
 ![image](https://github.com/user-attachments/assets/ff85315d-769b-419e-b0c8-62f6a5c5818e)
+
 Brooklyn has the highest number of employees and so agencies while Richmond is the least recorded one
 
 
+```python
+con = psycopg2.connect(user=username_db, 
+                                   host=host_db,  
+                                   password=password_db,  
+                                   port=port_db,
+                                   database=db_name)
+cur = con.cursor()
+query = """select extract(month from AgencyStartDate) as Month , count(*) as frequency 
+from payroll.agency
+group by Month
+order by frequency desc 
+"""
+cur.execute(query)
+result = cur.fetchall()
+temp = pd.DataFrame(result , columns = [i[0] for i in cur.description])
+sns.lineplot(x= temp['month'], y =temp['frequency'] )
+plt.title('Number of start ups per Months')
+plt.show()
+```
+![image](https://github.com/user-attachments/assets/a3c551c1-8927-4138-9037-09d902021c0a)
+
+July witnessed the highest number of start up agencies that means more jobs and employees while March and December were the lowest with recesiion
+
+```python
+con = psycopg2.connect(user=username_db, 
+                                   host=host_db,  
+                                   password=password_db,  
+                                   port=port_db,
+                                   database=db_name)
+cur = con.cursor()
+query = """select extract(year from AgencyStartDate) as year , count(*) as frequency 
+from payroll.agency
+group by year
+order by frequency desc 
+"""
+cur.execute(query)
+result = cur.fetchall()
+temp = pd.DataFrame(result , columns = [i[0] for i in cur.description])
+sns.lineplot(x= temp['year'], y =temp['frequency'] )
+plt.title('Number of start ups per yearss')
+plt.show()
+```
+![image](https://github.com/user-attachments/assets/a4ca4767-0c42-4678-bb2b-2f69f01adcd0)
+
+2019 witnessed the highest number of start ups in New York City while the 90s and below where the lowest
+
+
+```python
+con = psycopg2.connect(user=username_db, 
+                                   host=host_db,  
+                                   password=password_db,  
+                                   port=port_db,
+                                   database=db_name)
+cur = con.cursor()
+query = """ select  FirstName , LastName ,TitleDescription , LeaveStatusasofJune30 , sum(TotalOTPaid) as total_paid_salary
+from payroll.employee inner join payroll.fact_employee
+on employee.EmployeeID = fact_employee.EmployeeID
+group by FirstName,LastName ,TitleDescription , LeaveStatusasofJune30
+order by total_paid_salary desc
+"""
+cur.execute(query)
+result = cur.fetchall()
+temp = pd.DataFrame(result , columns = [i[0] for i in cur.description])
+temp['full_name'] = temp['firstname'] +' '+ temp['lastname']
+temp_top = temp[:5]
+sns.barplot(x= temp_top['total_paid_salary'], y =temp_top['full_name'], hue=temp_top['titledescription'] )
+plt.title('Top five paid Employees in New York')
+plt.show()
+```
+![image](https://github.com/user-attachments/assets/97b4b56e-8d3e-436e-8551-a62b7127166c)
+
+```python
+temp_top = temp[-5:]
+sns.barplot(x= temp_top['total_paid_salary'], y =temp_top['full_name'], hue=temp_top['titledescription'] )
+plt.title('Lowest five paid Employees in New York')
+plt.show()
+```
+![image](https://github.com/user-attachments/assets/e8bb9321-8ba1-4742-be86-c2a776d4f083)
+
+From above we conclude the following:
+- Patrick Pettit is the highest paid employee in New York
+- Jason Graham is the lowest recorded eone in New York
+- Stationary Engineer is a high on demand job in USA with welfared income
+- Medical Examination sector has the worst and lowest income jobs
+
+
+```python
+con = psycopg2.connect(user=username_db, 
+                                   host=host_db,  
+                                   password=password_db,  
+                                   port=port_db,
+                                   database=db_name)
+cur = con.cursor()
+query = """ select  TitleDescription , LeaveStatusasofJune30 , sum(RegularHours) as total_Working_hours ,
+sum(TotalOTPaid) as total_paid_salary
+from payroll.employee inner join payroll.fact_employee
+on employee.EmployeeID = fact_employee.EmployeeID
+group by TitleDescription , LeaveStatusasofJune30
+order by total_working_hours desc
+"""
+cur.execute(query)
+result = cur.fetchall()
+temp = pd.DataFrame(result , columns = [i[0] for i in cur.description])
+plt.figure(figsize=(12,10))
+sns.scatterplot(x=temp['titledescription'] , y=temp['total_paid_salary'],hue=temp['total_working_hours'])
+plt.title('Relation paid jobs and recorded regular hours')
+plt.xticks(rotation=90)
+plt.show()
+```
+![image](https://github.com/user-attachments/assets/3aa4b1ac-7f10-4b82-b851-bef867d9bdb4)
+
+EMERGENCY PREPAREDNESS SPECIALIST socred the highest paid salary with a correlated high number of working hours while most of jobs' income is positively correlated with the working hours as the lower scored hours are, the lower income is.
