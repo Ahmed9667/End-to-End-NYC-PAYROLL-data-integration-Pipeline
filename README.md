@@ -238,3 +238,81 @@ agency['AgencyStartDate'] = pd.to_datetime(agency['AgencyStartDate'])
 #create table employee
 employee = df[['EmployeeID','TitleCode','LastName', 'FirstName','PayrollNumber','TitleDescription', 'LeaveStatusasofJune30']].copy().drop_duplicates().reset_index(drop=True)
 ```
+
+### `2.Create a public user with limited privileges to enable public access to the NYC Data warehouse:`
+For security purpose we will create a virtual environment with parameter of postgresql server with limited access
+```python
+from sqlalchemy import create_engine, text
+from dotenv import load_dotenv
+import os
+'''
+For security purpose we will create a virtual environment 
+with parameter of postgresql server with limited access
+'''
+# Load the environment .env variables from the .env files
+load_dotenv()
+# parameters
+host_db = os.getenv('host')
+username_db = os.getenv ('user')
+password_db = os.getenv ('password')
+port_db = os.getenv ('port')
+db_name = os.getenv ('name')
+
+# Define database connection parameters including the database name
+db_params = {
+    'username':username_db,
+    'password':password_db,
+    'host':host_db,
+    'port':port_db,
+    'database':db_name
+
+}
+
+default_db_url =f"postgresql://{db_params['username']}:{db_params['password']}@{db_params['host']}:{db_params['port']}/postgres"
+
+#create database
+try:
+    # open the connection
+    conn = psycopg2.connect(default_db_url)
+    conn.autocommit = True
+    cur = conn.cursor()
+
+#check if the database is already existed
+    cur.execute(f"select 1 from pg_catalog.pg_database where datname='{db_params['database']}'")
+    exists = cur.fetchone()
+    if not exists:
+        # Create the database
+        cur.execute(f"create database {db_params['database']}")
+        print(f"Database {db_params['database']} created successfully")
+
+    else:
+        print(f"Database {db_params['database']} already existed")
+
+    # Close the cnnection
+    cur.close()
+    conn.close()
+except exception as e :
+    print(f"an error {e} occurred")
+
+# connect database
+load_dotenv()
+# parameters
+host_db = os.getenv('host')
+username_db = os.getenv ('user')
+password_db = os.getenv ('password')
+port_db = os.getenv ('port')
+db_name = os.getenv ('name')
+# Connect to the new created database nyc
+def db_connected():
+    connection = psycopg2.connect(user=username_db, 
+                                   host=host_db,  
+                                   password=password_db, 
+                                   port=port_db,
+                                   database=db_name)
+
+    return connection
+
+conn = db_connected()
+print(f"Database {db_params['database']} connected successfully")
+```
+
