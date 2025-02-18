@@ -222,7 +222,8 @@ We only have column 'EmployeeID' with unique keys
 
 ### Dimensional Model Of Schema
 
-![Schema.png](attachment:Schema.png)
+![Schema](https://github.com/user-attachments/assets/3bee5b4a-5b6e-435e-a32a-7c9a037ac2aa)
+
 
 We will create tables according to the structured schema and then load them to PostgreSql server database
 ```python
