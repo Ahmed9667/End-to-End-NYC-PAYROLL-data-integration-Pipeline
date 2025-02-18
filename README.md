@@ -106,7 +106,6 @@ frame_of_duplicates['Column'] = list(df.columns)
 frame_of_duplicates['Duplicated or Not'] = duplicates
 frame_of_duplicates
 ```
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
