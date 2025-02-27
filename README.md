@@ -11,10 +11,12 @@ agencies. The City of New York would like to develop a Data Analytics platform t
 - Python(Pndas, Matplotlib, Seaborn)
 - PostgreSQL
 - Git Version Controll
+- Apache Airflow
 
 ## Data Architecture:
 
-![tttttt drawio](https://github.com/user-attachments/assets/042cdeda-f566-452d-90b3-98fc0716e84a)
+![Untitled Diagram drawio](https://github.com/user-attachments/assets/097dc3ad-a730-453e-8d72-5784485866b4)
+
 
 
 ## Project's Objectives:
