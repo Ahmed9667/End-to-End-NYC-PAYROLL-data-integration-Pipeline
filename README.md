@@ -370,6 +370,11 @@ create_tales()
 print('Schema and tables created successfully')
 ```
 
+Automating the pipeline using Apaache Airflow
+
+![Screenshot 2025-02-28 193016](https://github.com/user-attachments/assets/6a31b615-223b-49dc-85c0-7954c014719f)
+
+
 Showing Schema in the data warehouse and check for created scheam and tables
 
 ![image](https://github.com/user-attachments/assets/8dc6a71d-4842-4154-b12c-652d0a6a101a)
